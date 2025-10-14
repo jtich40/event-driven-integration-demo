@@ -1,11 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "TuiPpLDzfwI=",
+  "dgSpecHash": "rcXzlUHSDNQ=",
   "success": true,
   "projectFilePath": "/Users/jaredtichacek/personal-projects/event-driven-integration-demo/IntegrationApi/IntegrationApi.csproj",
   "expectedPackageFiles": [
+    "/Users/jaredtichacek/.nuget/packages/awssdk.core/4.0.1/awssdk.core.4.0.1.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/awssdk.dynamodbv2/4.0.7.2/awssdk.dynamodbv2.4.0.7.2.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/awssdk.extensions.netcore.setup/4.0.3.6/awssdk.extensions.netcore.setup.4.0.3.6.nupkg.sha512",
     "/Users/jaredtichacek/.nuget/packages/microsoft.aspnetcore.openapi/9.0.9/microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
-    "/Users/jaredtichacek/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+    "/Users/jaredtichacek/.nuget/packages/microsoft.extensions.configuration.abstractions/2.0.0/microsoft.extensions.configuration.abstractions.2.0.0.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/microsoft.extensions.logging.abstractions/2.0.0/microsoft.extensions.logging.abstractions.2.0.0.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/microsoft.extensions.primitives/2.0.0/microsoft.extensions.primitives.2.0.0.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/system.runtime.compilerservices.unsafe/4.4.0/system.runtime.compilerservices.unsafe.4.4.0.nupkg.sha512"
   ],
   "logs": []
 }
