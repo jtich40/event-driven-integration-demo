@@ -1,3 +1,6 @@
+using Amazon.DynamoDBv2;
+using IntegrationApi.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,8 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-// Register HttpClient for external API calls
+// register HttpClient for external API calls
 builder.Services.AddHttpClient();
+// register DynamoDB service
+builder.Services.AddAWSService<IAmazonDynamoDB>();
+builder.Services.AddSingleton<IDynamoDBService, DynamoDBService>();
 
 var app = builder.Build();
 
