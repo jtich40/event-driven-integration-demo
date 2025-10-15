@@ -61,7 +61,7 @@ namespace IntegrationApi.Controllers
 
         // POST: api/crm
         [HttpPost]
-        public async Task<ActionResult<User>> CreateUser(User user)
+        public async Task<ActionResult<User>> CreateUser(CreateUserDto userDto)
         {
             // mock integration calling external API (simulating Salesforce integration)
             try
@@ -72,8 +72,13 @@ namespace IntegrationApi.Controllers
 
                 _logger.LogInformation($"Integrated with external system: {externalData.Substring(0, 50)}...");
 
-                // generate ID and save to DynamoDB
-                user.Id = Guid.NewGuid().ToString();
+                // map DTO to entity
+                var user = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = userDto.Name,
+                    Email = userDto.Email
+                };
                 await _dynamoDb.SaveUserAsync(user);
 
                 _logger.LogInformation($"User {user.Id} saved to DynamoDB.");
@@ -84,7 +89,12 @@ namespace IntegrationApi.Controllers
             {
                 _logger.LogWarning($"External integration failed: {ex.Message}");
                 // continue saving even if integration fails
-                user.Id = Guid.NewGuid().ToString();
+                 var user = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = userDto.Name,
+                    Email = userDto.Email
+                };
                 await _dynamoDb.SaveUserAsync(user);
                 return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
             }
