@@ -74,12 +74,12 @@ public class Function
     
     private async Task StoreProcessedEvent(UserCreatedEvent userEvent, ILambdaContext context)
     {
-        context.Logger.LogInfomration("Storing processed event in DynamoDB...");
+        context.Logger.LogInformation("Storing processed event in DynamoDB...");
 
         var request = new PutItemRequest
         {
-            _tableName = _tableName,
-            Item = new Dictionary<string, CustomAttributeValue>
+            TableName = _tableName,
+            Item = new Dictionary<string, AttributeValue>
             {
                {"EventId", new AttributeValue { S = userEvent.EventId } },
                {"UserId", new AttributeValue { S = userEvent.User.Id } },
