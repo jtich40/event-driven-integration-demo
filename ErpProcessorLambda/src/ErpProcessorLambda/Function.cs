@@ -1,8 +1,10 @@
 using Amazon.Lambda.Core;
+using Amazon.Lambda.APIGatewayEvents;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using ErpProcessorLambda.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Reflection;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -27,30 +29,88 @@ public class Function
     }
 
     /// <summary>
+    /// API Gateway Lambda Proxy Integration handler
     /// Lambda function handler to process user created events
     /// Simulates ERP integration (e.g., Oracle Fusion, Peoplesoft)
     /// </summary>
-    public async Task<string> FunctionHandler(UserCreatedEvent input, ILambdaContext context)
+    public async Task<APIGatewayProxyResponse> FunctionHandler(APIGatewayProxyRequest request, ILambdaContext context)
     {
-        context.Logger.LogInformation($"Processing event: {input.EventId}");
-        context.Logger.LogInformation($"User: {input.User.Name} ({input.User.Email})");
+        context.Logger.LogInformation($"Received API Gateway request: {request.Path}");
+        context.Logger.LogInformation($"HTTP Method: {request.HttpMethod}");
 
         try
         {
+            // parse the incoming event from request body
+            if (string.IsNullOrEmpty(request.Body))
+            {
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = 400,
+                    Body = JsonSerializer.Serialize(new { error = "Request body is required" }),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            var userEvent = JsonSerializer.Deserialize<UserCreatedEvent>(request.Body);
+
+            if (userEvent == null || userEvent.User == null)
+            {
+                return new APIGatewayProxyResponse
+                {
+                    StatusCode = 400,
+                    Body = JsonSerializer.Serialize(new { error = "Invalid event format" }),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
+            }
+
+            context.Logger.LogInformation($"Processing event: {userEvent.EventId}");
+            context.Logger.LogInformation($"User: {userEvent.User.Name} ({userEvent.User.Email})");
+
             // simulate ERP integration processing
-            await SimulateErpIntegration(input, context);
+            await SimulateErpIntegration(userEvent, context);
 
             // store processed event in DynamoDB
-            await StoreProcessedEvent(input, context);
+            await StoreProcessedEvent(userEvent, context);
 
-            context.Logger.LogInformation($"Successfully processed event {input.EventId}");
-            return $"Successfully processed user {input.User.Id}";
+            context.Logger.LogInformation($"Successfully processed event {userEvent.EventId}");
+
+            // return success response
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = 200,
+                Body = JsonSerializer.Serialize(new
+                {
+                    message = "Event processed successfully",
+                    eventId = userEvent.EventId,
+                    userId = userEvent.User.Id,
+                    processedAt = DateTime.UtcNow
+                }),
+                Headers = new Dictionary<string, string>
+                {
+                    { "Content-Type", "application/json" },
+                    { "Access-Control-Allow-Origin", "*" }
+                }
+            };
+        }
+        catch (JsonException ex)
+        {
+            context.Logger.LogError($"JSON parsing error: {ex.Message}");
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = 400,
+                Body = JsonSerializer.Serialize(new { error = "Invalid JSON format", details = ex.Message }),
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
         }
         catch (Exception ex)
         {
             context.Logger.LogError($"Error processing event: {ex.Message}");
-            // lambda will retry on failure
-            throw;
+            return new APIGatewayProxyResponse
+            {
+                StatusCode = 500,
+                Body = JsonSerializer.Serialize(new { error = "Internal server error", details = ex.Message }),
+                Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            };
         }
     }
 
