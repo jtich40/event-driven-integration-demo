@@ -4,7 +4,7 @@ using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using ErpProcessorLambda.Models;
 using System.Text.Json;
-using System.Reflection;
+
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -128,7 +128,7 @@ public class Function
         await Task.Delay(100);
 
         context.Logger.LogInformation($"ERP: Created employee record for {userEvent.User.Name}");
-        context.Logger.LogInformation($"ERP: Assigned employee ID: EMP-{userEvent.User.Id.Substring(0, 8)}");
+        context.Logger.LogInformation($"ERP: Assigned employee ID: EMP-{userEvent.User.Id.Substring(0, Math.Min(8, userEvent.User.Id.Length))}");
     }
     
     private async Task StoreProcessedEvent(UserCreatedEvent userEvent, ILambdaContext context)
@@ -140,13 +140,13 @@ public class Function
             TableName = _tableName,
             Item = new Dictionary<string, AttributeValue>
             {
-               {"EventId", new AttributeValue { S = userEvent.EventId } },
-               {"UserId", new AttributeValue { S = userEvent.User.Id } },
-                {"UserName", new AttributeValue { S = userEvent.User.Name } },
-                {"UserEmail", new AttributeValue { S = userEvent.User.Email } },
-                {"ProcessedAt", new AttributeValue { S = DateTime.UtcNow.ToString("o") } },
-                {"EventType", new AttributeValue { S  = userEvent.EventType } },
-                {"Status", new AttributeValue { S = "Processed" } }
+                { "EventId", new AttributeValue { S = userEvent.EventId } },
+                { "UserId", new AttributeValue { S = userEvent.User.Id } },
+                { "UserName", new AttributeValue { S = userEvent.User.Name } },
+                { "UserEmail", new AttributeValue { S = userEvent.User.Email } },
+                { "ProcessedAt", new AttributeValue { S = DateTime.UtcNow.ToString("o") } },
+                { "EventType", new AttributeValue { S  = userEvent.EventType } },
+                { "Status", new AttributeValue { S = "Processed" } }
 
             }
         };
