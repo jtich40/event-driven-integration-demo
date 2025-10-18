@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net9.0": {
-      "AWSSDK.Core/4.0.1": {
+      "AWSSDK.Core/4.0.1.1": {
         "type": "package",
         "compile": {
           "lib/net8.0/AWSSDK.Core.dll": {
@@ -51,6 +51,22 @@
         },
         "build": {
           "buildTransitive/net8.0/AWSSDK.Extensions.NETCore.Setup.targets": {}
+        }
+      },
+      "AWSSDK.SQS/4.0.1.11": {
+        "type": "package",
+        "dependencies": {
+          "AWSSDK.Core": "[4.0.1.1, 5.0.0)"
+        },
+        "compile": {
+          "lib/net8.0/AWSSDK.SQS.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.SQS.dll": {
+            "related": ".pdb;.xml"
+          }
         }
       },
       "Microsoft.AspNetCore.OpenApi/9.0.9": {
@@ -162,15 +178,15 @@
     }
   },
   "libraries": {
-    "AWSSDK.Core/4.0.1": {
-      "sha512": "P1Pq1G/NeDFpkzTvA/qeSgxPxB0mbrcuXOCuDTAhKOp/i+05MP6by/OXQu38PmX687jeLDselTad8wY41xgDmQ==",
+    "AWSSDK.Core/4.0.1.1": {
+      "sha512": "RBaHkOZQ/cb84H6o2tNvyZv2Gv/lDOok5CgE6gJV2JC2s67mkBAAPWpPrqTDUH86ogmWFA8u8+37u1fvlj4nAA==",
       "type": "package",
-      "path": "awssdk.core/4.0.1",
+      "path": "awssdk.core/4.0.1.1",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "awssdk.core.4.0.1.nupkg.sha512",
+        "awssdk.core.4.0.1.1.nupkg.sha512",
         "awssdk.core.nuspec",
         "images/AWSLogo.png",
         "lib/net472/AWSSDK.Core.dll",
@@ -240,6 +256,35 @@
         "lib/netstandard2.0/AWSSDK.Extensions.NETCore.Setup.dll",
         "lib/netstandard2.0/AWSSDK.Extensions.NETCore.Setup.pdb",
         "lib/netstandard2.0/AWSSDK.Extensions.NETCore.Setup.xml"
+      ]
+    },
+    "AWSSDK.SQS/4.0.1.11": {
+      "sha512": "wGDz2XAScnsmNQOE82uIAf4LlZ77RTB0SHq2PxjrES6jNKHwjdhOfm+9wiszJle3Gz6T0/VPFm9fe4Qm68k7HA==",
+      "type": "package",
+      "path": "awssdk.sqs/4.0.1.11",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "analyzers/dotnet/cs/AWSSDK.SQS.CodeAnalysis.dll",
+        "analyzers/dotnet/cs/SharedAnalysisCode.dll",
+        "awssdk.sqs.4.0.1.11.nupkg.sha512",
+        "awssdk.sqs.nuspec",
+        "images/AWSLogo.png",
+        "lib/net472/AWSSDK.SQS.dll",
+        "lib/net472/AWSSDK.SQS.pdb",
+        "lib/net472/AWSSDK.SQS.xml",
+        "lib/net8.0/AWSSDK.SQS.dll",
+        "lib/net8.0/AWSSDK.SQS.pdb",
+        "lib/net8.0/AWSSDK.SQS.xml",
+        "lib/netcoreapp3.1/AWSSDK.SQS.dll",
+        "lib/netcoreapp3.1/AWSSDK.SQS.pdb",
+        "lib/netcoreapp3.1/AWSSDK.SQS.xml",
+        "lib/netstandard2.0/AWSSDK.SQS.dll",
+        "lib/netstandard2.0/AWSSDK.SQS.pdb",
+        "lib/netstandard2.0/AWSSDK.SQS.xml",
+        "tools/install.ps1",
+        "tools/uninstall.ps1"
       ]
     },
     "Microsoft.AspNetCore.OpenApi/9.0.9": {
@@ -372,6 +417,7 @@
     "net9.0": [
       "AWSSDK.DynamoDBv2 >= 4.0.7.2",
       "AWSSDK.Extensions.NETCore.Setup >= 4.0.3.6",
+      "AWSSDK.SQS >= 4.0.1.11",
       "Microsoft.AspNetCore.OpenApi >= 9.0.9"
     ]
   },
@@ -425,6 +471,10 @@
           "AWSSDK.Extensions.NETCore.Setup": {
             "target": "Package",
             "version": "[4.0.3.6, )"
+          },
+          "AWSSDK.SQS": {
+            "target": "Package",
+            "version": "[4.0.1.11, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",

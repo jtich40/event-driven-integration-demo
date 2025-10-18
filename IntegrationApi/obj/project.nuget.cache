@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "rcXzlUHSDNQ=",
+  "dgSpecHash": "xwaMv6LKfis=",
   "success": true,
   "projectFilePath": "/Users/jaredtichacek/personal-projects/event-driven-integration-demo/IntegrationApi/IntegrationApi.csproj",
   "expectedPackageFiles": [
-    "/Users/jaredtichacek/.nuget/packages/awssdk.core/4.0.1/awssdk.core.4.0.1.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/awssdk.core/4.0.1.1/awssdk.core.4.0.1.1.nupkg.sha512",
     "/Users/jaredtichacek/.nuget/packages/awssdk.dynamodbv2/4.0.7.2/awssdk.dynamodbv2.4.0.7.2.nupkg.sha512",
     "/Users/jaredtichacek/.nuget/packages/awssdk.extensions.netcore.setup/4.0.3.6/awssdk.extensions.netcore.setup.4.0.3.6.nupkg.sha512",
+    "/Users/jaredtichacek/.nuget/packages/awssdk.sqs/4.0.1.11/awssdk.sqs.4.0.1.11.nupkg.sha512",
     "/Users/jaredtichacek/.nuget/packages/microsoft.aspnetcore.openapi/9.0.9/microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
     "/Users/jaredtichacek/.nuget/packages/microsoft.extensions.configuration.abstractions/2.0.0/microsoft.extensions.configuration.abstractions.2.0.0.nupkg.sha512",
     "/Users/jaredtichacek/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",

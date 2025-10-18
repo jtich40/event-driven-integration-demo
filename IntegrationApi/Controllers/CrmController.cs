@@ -11,16 +11,18 @@ namespace IntegrationApi.Controllers
         private readonly ILogger<CrmController> _logger;
         private readonly HttpClient _httpClient;
         private readonly IDynamoDBService _dynamoDb;
+        private readonly ISqsService _sqsService;
 
         public CrmController(
             ILogger<CrmController> logger,
             IHttpClientFactory httpClientFactory,
-            IDynamoDBService dynamoDb
-        )
+            IDynamoDBService dynamoDb,
+            ISqsService sqsService)
         {
             _logger = logger;
             _httpClient = httpClientFactory.CreateClient();
             _dynamoDb = dynamoDb;
+            _sqsService = sqsService;
         }
 
         // GET api/crm
@@ -82,6 +84,23 @@ namespace IntegrationApi.Controllers
                 await _dynamoDb.SaveUserAsync(user);
 
                 _logger.LogInformation($"User {user.Id} saved to DynamoDB.");
+
+                // publish event to SQS for downstream processing
+                var userEvent = new UserCreatedEvent
+                {
+                    EventId = Guid.NewGuid().ToString(),
+                    EventType = "UserCreated",
+                    Timestamp = DateTime.UtcNow,
+                    User = new UserEventData
+                    {
+                        Id = user.Id,
+                        Name = user.Name,
+                        Email = user.Email
+                    }
+                };
+
+                await _sqsService.SendMessageAsync(userEvent);
+                _logger.LogInformation($"Published UserCreated event to SQS: {userEvent.EventId}");
 
                 return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
             }

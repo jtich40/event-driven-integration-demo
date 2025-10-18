@@ -1,4 +1,5 @@
 using Amazon.DynamoDBv2;
+using Amazon.SQS;
 using IntegrationApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +11,14 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 // register HttpClient for external API calls
 builder.Services.AddHttpClient();
-// register DynamoDB service
+
+// register AWS services
 builder.Services.AddAWSService<IAmazonDynamoDB>();
+builder.Services.AddAWSService<IAmazonSQS>();
+
+// register custom services
 builder.Services.AddSingleton<IDynamoDBService, DynamoDBService>();
+builder.Services.AddSingleton<ISqsService, SqsService>();
 
 var app = builder.Build();
 

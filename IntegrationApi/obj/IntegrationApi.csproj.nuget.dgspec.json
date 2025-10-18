@@ -52,6 +52,10 @@
               "target": "Package",
               "version": "[4.0.3.6, )"
             },
+            "AWSSDK.SQS": {
+              "target": "Package",
+              "version": "[4.0.1.11, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.9, )"
