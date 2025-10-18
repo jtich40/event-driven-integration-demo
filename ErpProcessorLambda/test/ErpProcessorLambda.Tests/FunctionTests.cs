@@ -93,7 +93,7 @@ namespace ErpProcessorLambda.Tests
         {
             var userEvent = new UserCreatedEvent
             {
-                eventId = eventId,
+                EventId = eventId,
                 EventType = "UserCreated",
                 Timestamp = DateTime.UtcNow,
                 User = new UserData

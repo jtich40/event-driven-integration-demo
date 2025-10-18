@@ -5,19 +5,19 @@ using IntegrationApi.Models;
 
 namespace IntegrationApi.Services
 {
-    public interface IDynamoDBService
+    public interface IDynamoDbService
     {
         Task<User?> GetUserAsync(string id);
         Task<List<User>> GetAllUsersAsync();
         Task SaveUserAsync(User user);
     }
     
-    public class DynamoDBService : IDynamoDBService
+    public class DynamoDbService : IDynamoDbService
     {
         private readonly IAmazonDynamoDB _dynamoDb;
         private readonly string _tableName = "Users";
 
-        public DynamoDBService(IAmazonDynamoDB dynamoDb)
+        public DynamoDbService(IAmazonDynamoDB dynamoDb)
         {
             _dynamoDb = dynamoDb;
         }

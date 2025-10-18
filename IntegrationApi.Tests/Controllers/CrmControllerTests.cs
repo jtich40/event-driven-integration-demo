@@ -1,7 +1,7 @@
 using Xunit;
 using Moq;
 using Moq.Protected;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using IntegrationApi.Controllers;
 using IntegrationApi.Models;
@@ -11,7 +11,6 @@ namespace IntegrationApi.Tests.Controllers
 {
     public class CrmControllerTests
     {
-        private readonly Mock<ILogger<CrmController>> _mockLogger;
         private readonly Mock<IHttpClientFactory> _mockHttpClientFactory;
         private readonly Mock<IDynamoDbService> _mockDynamoDb;
         private readonly Mock<ISqsService> _mockSqs;
@@ -19,7 +18,7 @@ namespace IntegrationApi.Tests.Controllers
 
         public CrmControllerTests()
         {
-            _mockLogger = new Mock<ILogger<CrmController>>();
+            var logger = new NullLogger<CrmController>();
             _mockHttpClientFactory = new Mock<IHttpClientFactory>();
             _mockDynamoDb = new Mock<IDynamoDbService>();
             _mockSqs = new Mock<ISqsService>();
@@ -41,8 +40,21 @@ namespace IntegrationApi.Tests.Controllers
             var httpClient = new HttpClient(mockHttpMessageHandler.Object); ;
             _mockHttpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
+            // setup DynamoDB and SQS mocks to return successful completions
+            _mockDynamoDb.Setup(x => x.SaveUserAsync(It.IsAny<User>()))
+                .Returns(Task.CompletedTask);
+
+            _mockDynamoDb.Setup(x => x.GetAllUsersAsync())
+                .ReturnsAsync(new List<User>());
+
+            _mockDynamoDb.Setup(x => x.GetUserAsync(It.IsAny<string>()))
+                .ReturnsAsync((User?)null);
+
+            _mockSqs.Setup(x => x.SendMessageAsync(It.IsAny<UserCreatedEvent>()))
+                .Returns(Task.CompletedTask);
+            
             _controller = new CrmController(
-                _mockLogger.Object,
+                logger,
                 _mockHttpClientFactory.Object,
                 _mockDynamoDb.Object,
                 _mockSqs.Object
@@ -81,7 +93,7 @@ namespace IntegrationApi.Tests.Controllers
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var user = Assert.IsType<user>(okResult.Value);
+            var user = Assert.IsType<User>(okResult.Value);
             Assert.Equal(userId, user.Id);
         }
 
@@ -111,7 +123,7 @@ namespace IntegrationApi.Tests.Controllers
             // Mock HttpClient to return successful response
             var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
             mockHttpMessageHandler.Protected()
-                .Setup<Task<HttpRequestMessage>>(
+                .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>()
@@ -119,18 +131,26 @@ namespace IntegrationApi.Tests.Controllers
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Content = new StringContent("{ \"id\":1,\"name\":\"Test\",\"email\": \"test@test.com\"}")
+                    // at least 50 chars to pass logging substring
+                    Content = new StringContent(new string('x', 100))
                 });
 
             var httpClient = new HttpClient(mockHttpMessageHandler.Object);
             _mockHttpClientFactory.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
+            // setup mocks to track if they're called and capture any exceptions
+            _mockDynamoDb.Setup(x => x.SaveUserAsync(It.IsAny<User>()))
+                .Returns(Task.CompletedTask);
+
+            _mockSqs.Setup(x => x.SendMessageAsync(It.IsAny<UserCreatedEvent>()))
+                .Returns(Task.CompletedTask);
+
             // Act
-            var result = await _controller.CreateUser(createUserDto);
+             var result = await _controller.CreateUser(createUserDto);
 
             // Assert
-            var createdResult = Assert.IsType<CreatedAtActionResult>(result.Result);
-            var user = Assert.IsType<user>(createdResult.Value);
+            var createdResult = Assert.IsType<CreatedAtActionResult>(result!.Result);
+            var user = Assert.IsType<User>(createdResult.Value);
 
             Assert.NotNull(user.Id);
             Assert.Equal(createUserDto.Name, user.Name);

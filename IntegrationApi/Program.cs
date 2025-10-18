@@ -17,7 +17,7 @@ builder.Services.AddAWSService<IAmazonDynamoDB>();
 builder.Services.AddAWSService<IAmazonSQS>();
 
 // register custom services
-builder.Services.AddSingleton<IDynamoDBService, DynamoDBService>();
+builder.Services.AddSingleton<IDynamoDbService, DynamoDbService>();
 builder.Services.AddSingleton<ISqsService, SqsService>();
 
 var app = builder.Build();

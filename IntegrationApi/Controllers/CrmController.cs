@@ -10,13 +10,13 @@ namespace IntegrationApi.Controllers
     {
         private readonly ILogger<CrmController> _logger;
         private readonly HttpClient _httpClient;
-        private readonly IDynamoDBService _dynamoDb;
+        private readonly IDynamoDbService _dynamoDb;
         private readonly ISqsService _sqsService;
 
         public CrmController(
             ILogger<CrmController> logger,
             IHttpClientFactory httpClientFactory,
-            IDynamoDBService dynamoDb,
+            IDynamoDbService dynamoDb,
             ISqsService sqsService)
         {
             _logger = logger;
@@ -71,8 +71,8 @@ namespace IntegrationApi.Controllers
                 var response = await _httpClient.GetAsync("https://jsonplaceholder.typicode.com/users/1");
                 response.EnsureSuccessStatusCode();
                 var externalData = await response.Content.ReadAsStringAsync();
-
-                _logger.LogInformation($"Integrated with external system: {externalData.Substring(0, 50)}...");
+                var preview = externalData.Length > 50 ? externalData.Substring(0, 50) : externalData;
+                _logger.LogInformation($"Integrated with external system: {preview}...");
 
                 // map DTO to entity
                 var user = new User
