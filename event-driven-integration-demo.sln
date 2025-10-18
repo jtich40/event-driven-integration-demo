@@ -1,22 +1,89 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationApi", "IntegrationApi\IntegrationApi.csproj", "{17B9879B-4241-A213-E8C1-C436E3936F4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationApi.Tests", "IntegrationApi.Tests\IntegrationApi.Tests.csproj", "{5DF1943A-95B7-4BA1-B16B-7E07084826BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ErpProcessorLambda", "ErpProcessorLambda", "{E5960151-CD8C-9305-9F41-4620E76501D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{20D3B348-50AE-0A85-D7DB-2948F0EA04BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErpProcessorLambda", "ErpProcessorLambda\src\ErpProcessorLambda\ErpProcessorLambda.csproj", "{1949EBCB-0D27-4F16-B346-405BD570500F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{E4809570-EC45-626C-00F3-649F4E2162B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErpProcessorLambda.Tests", "ErpProcessorLambda\test\ErpProcessorLambda.Tests\ErpProcessorLambda.Tests.csproj", "{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Debug|x64.Build.0 = Debug|Any CPU
+		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Debug|x86.Build.0 = Debug|Any CPU
 		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Release|x64.ActiveCfg = Release|Any CPU
+		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Release|x64.Build.0 = Release|Any CPU
+		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Release|x86.ActiveCfg = Release|Any CPU
+		{17B9879B-4241-A213-E8C1-C436E3936F4E}.Release|x86.Build.0 = Release|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Debug|x64.Build.0 = Debug|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Debug|x86.Build.0 = Debug|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Release|x64.ActiveCfg = Release|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Release|x64.Build.0 = Release|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Release|x86.ActiveCfg = Release|Any CPU
+		{5DF1943A-95B7-4BA1-B16B-7E07084826BD}.Release|x86.Build.0 = Release|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Debug|x64.Build.0 = Debug|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Debug|x86.Build.0 = Debug|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Release|x64.ActiveCfg = Release|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Release|x64.Build.0 = Release|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Release|x86.ActiveCfg = Release|Any CPU
+		{1949EBCB-0D27-4F16-B346-405BD570500F}.Release|x86.Build.0 = Release|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Debug|x64.Build.0 = Debug|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Debug|x86.Build.0 = Debug|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Release|x64.ActiveCfg = Release|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Release|x64.Build.0 = Release|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Release|x86.ActiveCfg = Release|Any CPU
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{20D3B348-50AE-0A85-D7DB-2948F0EA04BB} = {E5960151-CD8C-9305-9F41-4620E76501D3}
+		{1949EBCB-0D27-4F16-B346-405BD570500F} = {20D3B348-50AE-0A85-D7DB-2948F0EA04BB}
+		{E4809570-EC45-626C-00F3-649F4E2162B5} = {E5960151-CD8C-9305-9F41-4620E76501D3}
+		{206D8DDF-1B79-4962-8D08-EEEF5BC6D1CE} = {E4809570-EC45-626C-00F3-649F4E2162B5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C01C8C2-C7D7-4828-AF7A-3771195CCFE2}
