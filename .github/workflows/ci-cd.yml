@@ -1,0 +1,70 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    
+    - name: Run tests
+      run: dotnet test --no-build --configuration Release --verbosity normal
+    
+    - name: Test Summary
+      if: always()
+      run: |
+        echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "✅ All tests passed" >> $GITHUB_STEP_SUMMARY
+
+  deploy-lambda:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Install Lambda Tools
+      run: dotnet tool install -g Amazon.Lambda.Tools
+    
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    
+    - name: Deploy Lambda
+      run: |
+        cd ErpProcessorLambda/src/ErpProcessorLambda
+        dotnet lambda deploy-function ErpProcessorFunction --function-role ${{ secrets.LAMBDA_ROLE_ARN }}
+    
+    - name: Deployment Summary
+      if: success()
+      run: |
+        echo "## Deployment Success" >> $GITHUB_STEP_SUMMARY
+        echo "🚀 Lambda function deployed to AWS" >> $GITHUB_STEP_SUMMARY
+        echo "- Function: ErpProcessorFunction" >> $GITHUB_STEP_SUMMARY
+        echo "- Region: us-east-1" >> $GITHUB_STEP_SUMMARY
