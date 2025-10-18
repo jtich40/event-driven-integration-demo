@@ -2,6 +2,7 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using Amazon.Lambda.SQSEvents;
 using ErpProcessorLambda.Models;
 using System.Text.Json;
 
@@ -130,7 +131,7 @@ public class Function
         context.Logger.LogInformation($"ERP: Created employee record for {userEvent.User.Name}");
         context.Logger.LogInformation($"ERP: Assigned employee ID: EMP-{userEvent.User.Id.Substring(0, Math.Min(8, userEvent.User.Id.Length))}");
     }
-    
+
     private async Task StoreProcessedEvent(UserCreatedEvent userEvent, ILambdaContext context)
     {
         context.Logger.LogInformation("Storing processed event in DynamoDB...");
@@ -153,5 +154,56 @@ public class Function
 
         await _dynamoDb.PutItemAsync(request);
         context.Logger.LogInformation("Event stored successfully");
+    }
+    
+    /// <summary>
+    /// SQS Event handler - processes messages from queue
+    /// This is triggered automatically when messages arrive in SQS
+    /// </summary>
+    public async Task SqsFunctionHandler(SQSEvent sqsEvent, ILambdaContext context)
+    {
+        context.Logger.LogInformation($"Received {sqsEvent.Records.Count} messages from SQS");
+
+        foreach (var message in sqsEvent.Records)
+        {
+            context.Logger.LogInformation($"Processing message: {message.MessageId}");
+            context.Logger.LogInformation($"Message body: {message.Body}");
+
+            try
+            {
+                // parse the event from SQS message body
+                var userEvent = JsonSerializer.Deserialize<UserCreatedEvent>(message.Body);
+
+                if (userEvent == null || userEvent.User == null)
+                {
+                    context.Logger.LogInformation($"Invalid message format: : {message.Body}");
+                    // skip this message, process next
+                    continue;
+                }
+
+                context.Logger.LogInformation($"Processing event: {userEvent.EventId}");
+                context.Logger.LogInformation($"User: {userEvent.User.Name} ({userEvent.User.Email})");
+
+                // process the event (same logic as API gateway)
+                await SimulateErpIntegration(userEvent, context);
+                await StoreProcessedEvent(userEvent, context);
+
+                context.Logger.LogInformation($"Successfully processed message {message.MessageId}");
+            }
+            catch (JsonException ex)
+            {
+                context.Logger.LogError($"JSON parsing error for message {message.MessageId}: {ex.Message}");
+                // message will go to DLQ if configured or be retried
+                throw;
+            }
+            catch (Exception ex)
+            {
+                context.Logger.LogError($"Error processing message {message.MessageId}: {ex.Message}");
+                // let lambda retry
+                throw;
+            }
+        }
+
+        context.Logger.LogInformation($"Finished processing {sqsEvent.Records.Count} messages");
     }
 }
