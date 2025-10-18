@@ -260,15 +260,68 @@ dotnet lambda deploy-function
 │   ├── Services/                # Business logic (DynamoDB, SQS)
 │   └── Program.cs               # Application entry point
 │
+├── IntegrationApi.Tests/        # API unit tests
+│   └── Controllers/             # Controller tests
+│
 ├── ErpProcessorLambda/          # AWS Lambda function project
-│   └── src/
-│       └── ErpProcessorLambda/
-│           ├── Function.cs      # Lambda handlers (SQS, API Gateway)
-│           ├── Models/          # Event models
-│           └── aws-lambda-tools-defaults.json
+│   ├── src/
+│   │   └── ErpProcessorLambda/
+│   │       ├── Function.cs      # Lambda handlers (SQS, API Gateway)
+│   │       ├── Models/          # Event models
+│   │       └── aws-lambda-tools-defaults.json
+│   │
+│   └── test/
+│       └── ErpProcessorLambda.Tests/
+│           └── FunctionTest.cs  # Lambda unit tests
 │
 └── README.md
 ```
+
+## Testing
+
+### Run All Tests
+```bash
+# From repository root
+dotnet test
+```
+
+### Test Coverage
+- **IntegrationApi.Tests**: 4 tests covering GET/POST endpoints, validation, and error cases
+  - `GetUsers_ReturnsOkResult_WithListOfUsers`
+  - `GetUser_WithValidId_ReturnsUser`
+  - `GetUser_WithInvalidId_ReturnsNotFound`
+  - `CreateUser_SavesUserAndPublishesEvent`
+
+- **ErpProcessorLambda.Tests**: Lambda function tests covering SQS message processing
+
+### Expected Output
+```
+Test Run Successful.
+Total tests: 4+
+     Passed: 4+
+     Failed: 0
+  Duration: < 1 s
+```
+
+### Testing Approach
+- **Unit tests** with xUnit and Moq for mocking dependencies
+- **NullLogger** for test isolation
+- **Mock HttpClient** for external API calls
+- **Verify** calls to ensure proper service interactions
+
+## CI/CD Pipeline
+
+GitHub Actions workflow automatically:
+- ✅ Runs on every push and pull request
+- ✅ Builds all projects (.NET 8)
+- ✅ Runs full test suite
+- ✅ Deploys Lambda to AWS on merge to main
+- ✅ Security scanning with GitGuardian
+
+View workflow: [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml)
+
+### Pipeline Status
+![CI/CD Pipeline](https://github.com/jtich40/event-driven-integration-demo/actions/workflows/ci-cd.yml/badge.svg)
 
 ## License
 
